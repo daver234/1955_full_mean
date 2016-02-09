@@ -1,0 +1,23 @@
+* {
+	/*font-family: arial, sans-serif;*/
+	font-family: monaco;
+	font-size: 12pt;
+}
+
+#container{
+	margin-left: 50px;
+	width: 900px;
+}
+#adder{
+	width: 400px;
+	margin-left: 600px;
+}
+#first_input{
+	width: 180px;
+}
+#first_input, #enter{
+	display: block;
+}
+#enter{
+	margin-left: 100px;
+}

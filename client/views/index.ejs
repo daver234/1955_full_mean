@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  	<title>Mongoose Dashboard</title>
+      <meta name="description" content="WS">
+  	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+	<!-- Latest compiled JavaScript -->
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="/style.css" type="text/css">
+  </head>
+  <body>
+  
+
+	<div id="container">
+	
+		<a  href='/add_new' id="add1">Add New Dog</a>
+		<h1>Welcome to The Dog Dashboard</h1>
+		
+		<br>
+		<% for (var x in dogs) { %>
+		<div id='dog_grid'>
+			<img src="/images/<%= dogs[x].dog_image %>" id='image' alt="Dog" style="width:200px;height:150px;">
+			<p><a href="/dog/<%= dogs[x].id %>" id="details"><%= dogs[x].name %></a></p>
+		    
+		</div>
+		 <% } %>  
+    </div>
+    	
+  	</body>
+  	</html>

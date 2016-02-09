@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="peoples_app">
+  <head>
+  	<title>1955 with Angular Dashboard</title>
+      <meta name="description" content="WS">
+  	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+	<!-- Latest compiled JavaScript -->
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="/style.css" type="text/css">
+
+    <script>
+    	var peoples_app = angular.module('peoples_app', []);
+    	peoples_app.factory('PeopleFactory', function($http) {
+			var factory = {};
+			var peoples = [];
+
+			factory.getPeoples = function(callback) {
+			$http.get('/getPeoples').success(function(output) {
+				console.log('back from getPeoples in Factory', output);
+			  peoples = output;
+			  callback(peoples);
+			  }) 
+			}
+			factory.addPeople = function(info, callback) {
+			console.log('new people',info.name);
+			$http.post('/addPeople', {name: info.name}).success(function() {
+			 console.log('back from adding');
+			 callback();
+			}) 
+			}
+			factory.removePeople = function(info,callback) {
+				console.log('removePeople', info._id);
+				$http.post('removePeople', {_id: info._id}).success(function() {
+					console.log('back from removing people');
+					callback();
+				})
+			}
+			return factory;
+			});
+
+    	peoples_app.controller('PeoplesController', function($scope, PeopleFactory) {
+	      PeopleFactory.getPeoples(function(data) {
+	      	console.log('in controller back from factory',data);
+	        $scope.peoples = data;
+	      }); 
+	      $scope.addpeople = function() {
+	        PeopleFactory.addPeople($scope.new_people, function() {
+	          console.log('ready to go get peoples after adding people');
+	          $scope.peoples = PeopleFactory.getPeoples(function(data){
+	            $scope.peoples = data;
+	          });
+	          });
+	      }
+
+	      $scope.removePeople = function(people) {
+	      	console.log('about to remove',people);
+	      	PeopleFactory.removePeople(people, function() {
+	      		console.log('back from remove people, person is gone.')
+	      		$scope.peoples = PeopleFactory.getPeoples(function(data) {
+	      			$scope.peoples = data;
+	      		});
+	      	});
+	      }
+	    })
+    	</script>
+  </head>
+  <body ng-controller='PeoplesController'>
+  
+
+
+
+	<div id="container">
+		<h3> 1955 Dashboard <h3>
+		<hr>
+		<div id='adder'>
+			<u>Add people who were born in 1955!</u>
+			<br>
+			<br>
+			<input type='text' id='first_input' ng-model='new_people.name' class="form-control" autofocus> 
+			<br>
+			<input type='submit' id='enter' ng-click='addpeople()' class="btn btn-primary">
+		</div>
+		<table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat='people in peoples'>
+                <td >{{people.name}}</td>
+                <td><input type='button'  class="btn btn-default" id='btn2' name="people.name" value="Delete" ng-click='removePeople(people)'></td>
+              </tr>
+              
+            </tbody>
+          </table>
+    </div>
+    	
+  	</body>
+  	</html>
